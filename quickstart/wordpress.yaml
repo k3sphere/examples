@@ -1,0 +1,43 @@
+wordpressUsername: user
+wordpressPassword: "password"
+ingress:
+  enabled: true
+  ingressClassName: "traefik"
+  hostname: "wordpress.xxx.k3sphere.io"
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
+    traefik.ingress.kubernetes.io/acme-tls: "true"
+  tls: true
+  extraTls:
+    - hosts:
+        - "wordpress.xxx.k3sphere.io"
+      secretName: "wordpress-tls"
+  path: "/"
+  pathType: ImplementationSpecific
+
+service:
+  type: ClusterIP
+
+db:
+  enabled: true
+  mysqlDatabase: "bitnami_wordpress"
+  mysqlUser: "bn_wordpress"
+  mysqlPassword: "wordpresspassword"
+  auth:
+    rootPassword: "rootpassword"
+
+mariadb:
+  enabled: true
+  auth:
+    database: "bitnami_wordpress"
+    username: "bn_wordpress"
+    password: "wordpresspassword"
+    rootPassword: "rootpassword"
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
